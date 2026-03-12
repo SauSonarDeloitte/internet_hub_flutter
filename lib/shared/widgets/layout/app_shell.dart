@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../core/route/route_names.dart';
 import '../../../features/auth/bloc/auth_bloc.dart';
 import '../../../features/auth/bloc/auth_event.dart';
 import '../../../features/auth/bloc/auth_state.dart';
+import '../../../utils/debug/debug_utils.dart';
 import '../menu/app_drawer.dart';
 
 class AppShell extends StatelessWidget {
@@ -156,6 +159,15 @@ class _AppBar extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const Spacer(),
+          // Debug button (only visible in debug mode)
+          if (DebugUtils.isDebugMode)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              tooltip: 'Developer Logs',
+              onPressed: () {
+                context.push(RouteNames.talkerScreen);
+              },
+            ),
           const _UserProfileButton(),
         ],
       ),

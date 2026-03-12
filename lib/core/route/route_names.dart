@@ -24,4 +24,7 @@ class RouteNames {
   static const String map = '/map';
   static const String emergencyContacts = '/emergency-contacts';
   static const String companyOverview = '/company-overview';
+  
+  // Debug routes (only available in debug mode)
+  static const String talkerScreen = '/debug/logs';
 }

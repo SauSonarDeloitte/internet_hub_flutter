@@ -202,6 +202,113 @@ Main Menu
 
 ---
 
+## Phase 2.5: Talker UI Integration (Debug Logging Interface)
+
+### 2.5.1 Create Talker Screen Route
+- [x] Add Talker screen route to `core/route/route_names.dart`
+- [x] Configure Talker screen route in GoRouter (`utils/router/app_router.dart`)
+- [x] Make Talker screen accessible only in debug mode
+- [x] Test navigation to Talker screen
+
+### 2.5.2 Add Talker Button to Login Screen
+- [x] Add floating action button (FAB) to login screen
+- [x] Position FAB in bottom-right corner
+- [x] Add debug-only visibility check (only show in debug mode)
+- [x] Add icon (e.g., `Icons.bug_report` or `Icons.developer_mode`)
+- [x] Wire FAB to navigate to Talker screen
+- [x] Test FAB visibility and navigation
+
+### 2.5.3 Add Talker Button to Dashboard Drawer
+- [x] Add "Developer Logs" menu item to drawer
+- [x] Position in a separate "Debug" section at bottom of drawer
+- [x] Add debug-only visibility check
+- [x] Add appropriate icon (e.g., `Icons.terminal` or `Icons.code`)
+- [x] Wire menu item to navigate to Talker screen
+- [x] Test drawer menu item visibility and navigation
+
+### 2.5.4 Add Talker Button to AppBar Actions
+- [x] Add Talker icon button to AppBar actions
+- [x] Position after user profile menu
+- [x] Add debug-only visibility check
+- [x] Add icon (e.g., `Icons.bug_report`)
+- [x] Wire button to navigate to Talker screen
+- [x] Ensure responsive behavior (hide on small screens if needed)
+- [x] Test AppBar button visibility and navigation
+
+### 2.5.5 Configure Talker Screen Settings
+- [x] Customize Talker screen theme to match app theme
+- [x] Configure log filters (show/hide specific log types)
+- [x] Add ability to clear logs
+- [x] Add ability to share/export logs
+- [x] Test Talker screen functionality
+
+### 2.5.6 Testing & Verification
+- [x] Test Talker button visibility in debug mode
+- [x] Verify Talker buttons are hidden in release mode
+- [x] Test navigation from all three entry points (login, drawer, appbar)
+- [x] Verify logs are displayed correctly in Talker screen
+- [x] Test log filtering and clearing
+- [x] Run `dart analyze` to ensure no errors
+- [ ] Test on multiple screen sizes (mobile, tablet, desktop)
+
+### 2.5.7 Bug Fixes
+- [x] Fix Talker screen not opening when tapping debug buttons
+  - Issue: Tapping the Talker button (FAB, drawer menu, or AppBar) does not navigate to Talker screen
+  - Root Cause: Auth redirect logic was blocking access to the Talker screen route
+  - **Solution Implemented:**
+    - Added exception in redirect logic to allow access to Talker screen in debug mode without authentication
+    - Talker screen can now be accessed from login screen (unauthenticated) and from authenticated screens
+    - Added logging to track when Talker screen access is allowed
+  - Files Modified:
+    - `lib/utils/router/app_router.dart` - Updated redirect logic to allow Talker screen access in debug mode
+  - **✅ VERIFIED WORKING:** User confirmed the fix is working
+
+- [x] Fix Developer Logs menu item in drawer not opening Talker screen
+  - Issue: Tapping "Developer Logs" menu item in the navigation drawer causes error: "You have popped the last page off of the stack, there are no pages left to show"
+  - Root Cause: Using `Navigator.of(context).pop()` to close drawer conflicts with GoRouter's navigation stack management
+  - **Solution Implemented:**
+    - Use `Scaffold.of(context).closeDrawer()` instead of `Navigator.of(context).pop()`
+    - This properly closes the drawer without interfering with GoRouter's navigation stack
+    - Use `WidgetsBinding.instance.addPostFrameCallback()` to schedule navigation after the current frame completes
+    - This ensures the drawer is fully closed before navigation begins
+  - Files Modified:
+    - `lib/shared/widgets/menu/app_drawer.dart` - Changed to Scaffold.closeDrawer() with post-frame callback navigation
+  - **✅ VERIFIED WORKING:** User confirmed the fix is working
+
+**Phase 2.5 Structure:**
+```dart
+lib/
+├── core/route/
+│   └── route_names.dart                    # Add talkerScreen route ✅
+├── utils/router/
+│   └── app_router.dart                     # Add Talker screen route config ✅
+├── features/auth/screens/
+│   └── login_screen.dart                   # Add FAB for Talker ✅
+├── shared/widgets/
+│   ├── layout/
+│   │   └── app_shell.dart                  # Add Talker button to AppBar ✅
+│   └── menu/
+│       └── app_drawer.dart                 # Add Talker menu item ✅
+└── utils/
+    └── debug/
+        └── debug_utils.dart                # Helper for debug mode checks ✅
+```
+
+**Expected Outcome:**
+- Developers can easily access Talker logs from three convenient locations ✅
+- Talker UI is only visible in debug builds ✅
+- All navigation to Talker screen works correctly ✅
+- Logs are properly displayed and filterable ✅
+
+**✅ Phase 2.5 Complete!** Talker UI integration is now fully implemented with access points from:
+1. Login screen (FAB in bottom-right corner)
+2. Navigation drawer (Developer Logs menu item)
+3. AppBar (bug report icon button)
+
+All access points are debug-only and properly configured. The Talker screen uses a dark theme and provides full logging functionality including filtering, clearing, and exporting logs.
+
+---
+
 ## Phase 3: Feature Implementation (Iterative)
 
 ### 3.1 Dashboard (Priority: HIGH)
@@ -532,11 +639,17 @@ lib/features/
 - [x] Verify Talker logs for auth events
 
 ### Step 9: Talker Integration & Testing
-- [ ] Add Talker screen for viewing logs in debug mode
 - [x] Test Bloc event/state logging
 - [x] Test navigation logging
 - [x] Test error/exception logging
 - [x] Configure Talker filters and settings
+- [ ] Add Talker screen UI access points (see Phase 2.5)
+
+### Step 10: Verify Phase 2 Completion
+- [x] Run `dart analyze` and fix all errors
+- [x] Test on device/emulator
+- [x] Verify all navigation flows work
+- [x] Commit Phase 2 changes to git
 
 ---
 
@@ -544,6 +657,7 @@ lib/features/
 
 - **Phase 1:** 3-4 days (setup + mock infrastructure)
 - **Phase 2:** 3-4 days (menu structure)
+- **Phase 2.5:** 0.5-1 day (Talker UI integration)
 - **Phase 3:** 6-8 weeks (iterative feature implementation with mock data)
 - **Phase 4:** 1 week (cross-cutting with mocks)
 - **Phase 5:** 1-2 weeks (polish)

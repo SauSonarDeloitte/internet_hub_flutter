@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../../core/route/route_names.dart';
 import '../../features/auth/bloc/auth_bloc.dart';
 import '../../features/auth/bloc/auth_state.dart';
@@ -22,6 +23,7 @@ import '../../features/map/screens/map_screen.dart';
 import '../../features/emergency_contacts/screens/emergency_contacts_screen.dart';
 import '../../features/company_overview/screens/company_overview_screen.dart';
 import '../logger/talker_config.dart';
+import '../debug/debug_utils.dart';
 
 class AppRouter {
   static GoRouter createRouter(AuthBloc authBloc) {
@@ -32,10 +34,17 @@ class AppRouter {
         final authState = authBloc.state;
         final isAuthenticated = authState is AuthAuthenticated;
         final isGoingToLogin = state.matchedLocation == RouteNames.login;
+        final isGoingToTalker = state.matchedLocation == RouteNames.talkerScreen;
 
         TalkerConfig.debug(
           'Router redirect - Auth: $isAuthenticated, Location: ${state.matchedLocation}',
         );
+
+        // Allow access to Talker screen in debug mode without authentication
+        if (isGoingToTalker && DebugUtils.isDebugMode) {
+          TalkerConfig.debug('Allowing access to Talker screen (debug mode)');
+          return null;
+        }
 
         // If not authenticated and not going to login, redirect to login
         if (!isAuthenticated && !isGoingToLogin) {
@@ -149,6 +158,20 @@ class AppRouter {
           name: 'company_overview',
           builder: (context, state) => const CompanyOverviewScreen(),
         ),
+        
+        // Debug routes (only accessible in debug mode)
+        if (DebugUtils.isDebugMode)
+          GoRoute(
+            path: RouteNames.talkerScreen,
+            name: 'talker_screen',
+            builder: (context, state) => TalkerScreen(
+              talker: TalkerConfig.instance,
+              theme: const TalkerScreenTheme(
+                backgroundColor: Color(0xFF1E1E1E),
+                textColor: Colors.white,
+              ),
+            ),
+          ),
       ],
     );
   }

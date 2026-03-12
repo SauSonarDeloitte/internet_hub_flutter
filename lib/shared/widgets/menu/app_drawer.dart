@@ -6,6 +6,7 @@ import '../../../core/route/route_names.dart';
 import '../../../features/auth/bloc/auth_bloc.dart';
 import '../../../features/auth/bloc/auth_event.dart';
 import '../../../features/auth/bloc/auth_state.dart';
+import '../../../utils/debug/debug_utils.dart';
 import 'menu_item_widget.dart';
 import 'menu_section_widget.dart';
 
@@ -81,6 +82,25 @@ class AppDrawer extends StatelessWidget {
 
             // Logout button
             const Divider(),
+            
+            // Debug section (only visible in debug mode)
+            if (DebugUtils.isDebugMode) ...[
+              ListTile(
+                leading: const Icon(Icons.terminal),
+                title: const Text('Developer Logs'),
+                onTap: () {
+                  // Close drawer using Scaffold.closeDrawer() instead of Navigator.pop()
+                  // This avoids conflicts with GoRouter's navigation stack
+                  Scaffold.of(context).closeDrawer();
+                  // Then navigate after the current frame completes
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.push(RouteNames.talkerScreen);
+                  });
+                },
+              ),
+              const Divider(),
+            ],
+            
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),

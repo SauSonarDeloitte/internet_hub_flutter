@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../core/route/route_names.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import '../../../utils/debug/debug_utils.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -221,6 +224,16 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         },
       ),
+      // Debug FAB - only visible in debug mode
+      floatingActionButton: DebugUtils.isDebugMode
+          ? FloatingActionButton(
+              onPressed: () {
+                context.push(RouteNames.talkerScreen);
+              },
+              tooltip: 'Developer Logs',
+              child: const Icon(Icons.bug_report),
+            )
+          : null,
     );
   }
 }
