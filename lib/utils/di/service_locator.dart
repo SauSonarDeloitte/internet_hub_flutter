@@ -2,6 +2,9 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../repository/auth/auth_repository.dart';
 import '../../repository/auth/mock_auth_repository.dart';
+import '../../repository/dashboard/dashboard_repository.dart';
+import '../../repository/dashboard/mock_dashboard_repository.dart';
+import '../../features/dashboard/bloc/dashboard_bloc.dart';
 import '../environment.dart';
 import '../logger/talker_config.dart';
 
@@ -23,10 +26,18 @@ Future<void> setupServiceLocator() async {
     getIt.registerLazySingleton<AuthRepository>(
       () => MockAuthRepository(getIt<SharedPreferences>()),
     );
+    getIt.registerLazySingleton<DashboardRepository>(
+      () => MockDashboardRepository(),
+    );
   } else {
     // TODO: Register real repositories when API is ready
     TalkerConfig.info('Real API repositories not yet implemented');
   }
+
+  // Register Blocs (factory so each screen gets a new instance)
+  getIt.registerFactory<DashboardBloc>(
+    () => DashboardBloc(repository: getIt<DashboardRepository>()),
+  );
 
   TalkerConfig.info('Service locator setup complete');
 }

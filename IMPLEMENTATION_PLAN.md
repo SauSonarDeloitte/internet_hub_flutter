@@ -182,7 +182,7 @@ Main Menu
 - User profile menu in app bar works
 - Logout functionality works correctly
 
-**Kiro Credits Consumed:** 24.64 credits
+**Kiro Credits Consumed:** 56 credits
 
 **Git Commit:**
 - Commit Hash: `afbdaf5`
@@ -309,19 +309,126 @@ All access points are debug-only and properly configured. The Talker screen uses
 
 ---
 
-## Phase 3: Feature Implementation (Iterative)
+## Phase 3: Login Screen Redesign (Design-Driven)
 
-### 3.1 Dashboard (Priority: HIGH)
-- [ ] Create dashboard feature folder structure
-- [ ] Implement dashboard screen with widgets
-- [ ] Add quick access cards
-- [ ] Implement notifications widget
-- [ ] Add activity feed
-- [ ] Create dashboard bloc/cubit
-- [ ] Create mock dashboard repository
-- [ ] Generate mock dashboard data
+> **📋 Design Specification:** See `login-design.md` for detailed design requirements and specifications.
+> 
+> **Purpose:** This phase focuses on redesigning the login screen based on user-provided design input. The current login screen is functional but basic. This phase will transform it into a polished, branded experience.
 
-### 3.2 Team Directory (Priority: HIGH)
+### 3.0 Design & Planning
+- [ ] User fills in design preferences in `login-design.md`
+- [ ] Review and confirm design requirements with user
+- [ ] Plan implementation approach based on design
+- [ ] Identify required assets (logo, images, icons)
+- [ ] List any new packages needed for design features
+
+### 3.1 Asset Preparation
+- [ ] Create assets folder structure in pubspec.yaml
+- [ ] Add logo assets (1x, 2x, 3x for different densities)
+- [ ] Add background images (if specified in design)
+- [ ] Add custom icons (if specified in design)
+- [ ] Optimize all assets for performance
+- [ ] Test asset loading on all platforms
+
+### 3.2 Custom Widgets & Components
+- [ ] Create custom text field widget (if custom styling needed)
+- [ ] Create login header component (logo + branding)
+- [ ] Create login form component (fields + validation)
+- [ ] Create login footer component (links + help)
+- [ ] Create social login buttons (if specified)
+- [ ] Create loading overlay widget
+
+### 3.3 Login Screen Implementation
+- [ ] Implement layout structure per design spec
+- [ ] Add responsive breakpoints (mobile/tablet/desktop)
+- [ ] Implement form fields with validation
+- [ ] Add "Remember Me" checkbox (if specified)
+- [ ] Add "Forgot Password" link (if specified)
+- [ ] Implement login button with loading state
+- [ ] Add error handling and display
+- [ ] Implement alternative login methods (if specified)
+
+### 3.4 Styling & Theme
+- [ ] Apply color scheme from design spec
+- [ ] Implement custom fonts (if specified)
+- [ ] Style form fields per design
+- [ ] Style buttons per design
+- [ ] Add background (color/gradient/image)
+- [ ] Implement dark mode support (if specified)
+- [ ] Add shadows, borders, and visual effects
+
+### 3.5 Animations & Interactions
+- [ ] Implement screen entry animation
+- [ ] Add field focus animations
+- [ ] Add button press feedback
+- [ ] Implement loading animations
+- [ ] Add error shake animation (optional)
+- [ ] Add smooth transitions
+
+### 3.6 Testing & Verification
+- [ ] Test on mobile (various screen sizes)
+- [ ] Test on tablet (portrait and landscape)
+- [ ] Test on desktop/web
+- [ ] Test dark mode (if implemented)
+- [ ] Test all form validations
+- [ ] Test with all demo credentials
+- [ ] Test error scenarios
+- [ ] Test accessibility features
+- [ ] Run `dart analyze` and fix all errors
+- [ ] Get user approval on final implementation
+
+### 3.7 Documentation
+- [ ] Update login-design.md with implementation notes
+- [ ] Add code comments for complex logic
+- [ ] Document custom widgets
+- [ ] Take screenshots of final design
+- [ ] Update README with login instructions
+
+**Phase 3 Expected Outcome:**
+- Polished, branded login screen matching design specifications
+- Responsive across all screen sizes and platforms
+- Smooth animations and interactions
+- Proper error handling and user feedback
+- Accessible and keyboard-friendly
+- Ready for production use
+
+---
+
+## Phase 4: Feature Implementation (Iterative)
+
+### 4.1 Dashboard (Priority: HIGH)
+- [x] Create dashboard feature folder structure
+- [x] Implement dashboard screen with widgets
+- [x] Add quick access cards
+- [x] Implement notifications widget
+- [x] Add activity feed
+- [x] Create dashboard bloc/cubit
+- [x] Create mock dashboard repository
+- [x] Generate mock dashboard data
+
+**✅ Phase 4.1 Complete!** Dashboard is now fully functional with:
+- ✅ Responsive dashboard layout with welcome section
+- ✅ Quick access cards grid (6 cards with navigation)
+- ✅ Leave balance widget with progress indicator
+- ✅ Notifications list with unread indicators
+- ✅ Upcoming events calendar
+- ✅ Activity feed with timeline
+- ✅ Pull-to-refresh functionality
+- ✅ Full state management with DashboardBloc
+- ✅ Mock data with realistic samples
+- ✅ Error handling and retry mechanism
+- ✅ No errors in dart analyze (verified)
+
+**Files Created:**
+- Models: `lib/features/dashboard/models/dashboard_data.dart`
+- Bloc: `lib/features/dashboard/bloc/` (dashboard_bloc.dart, dashboard_state.dart, dashboard_event.dart)
+- Repository: `lib/repository/dashboard/` (dashboard_repository.dart, mock_dashboard_repository.dart)
+- Widgets: `lib/features/dashboard/widgets/` (quick_access_card_widget.dart, notification_widget.dart, activity_feed_widget.dart, leave_balance_widget.dart, upcoming_events_widget.dart)
+- Mock data: `lib/mock/mock_dashboard.dart`
+- Screen: `lib/features/dashboard/screens/dashboard_screen.dart` (updated)
+- Service locator: `lib/utils/di/service_locator.dart` (updated with dashboard dependencies)
+
+### 4.2 Team Directory (Priority: HIGH)
 - [ ] Create team directory feature structure
 - [ ] Implement employee list screen
 - [ ] Create employee profile screen
@@ -330,7 +437,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Create mock team directory repository
 - [ ] Generate mock employee data (50-100 employees)
 
-### 3.3 Leave/Attendance (Priority: HIGH)
+### 4.3 Leave/Attendance (Priority: HIGH)
 - [ ] Create leave/attendance feature structure
 - [ ] Implement leave application form
 - [ ] Create leave history screen
@@ -341,7 +448,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Generate mock leave data and balances
 - [ ] Mock approval workflow states
 
-### 3.4 Policies (Priority: MEDIUM)
+### 4.4 Policies (Priority: MEDIUM)
 - [ ] Create policies feature structure
 - [ ] Implement policy list screen
 - [ ] Create policy detail/viewer screen
@@ -350,7 +457,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Mock acknowledgment tracking
 - [ ] Add search functionality
 
-### 3.5 Benefits (Priority: MEDIUM)
+### 4.5 Benefits (Priority: MEDIUM)
 - [ ] Create benefits feature structure
 - [ ] Implement benefits overview screen
 - [ ] Create benefit detail screens
@@ -358,7 +465,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Generate mock benefits data
 - [ ] Mock enrollment status
 
-### 3.6 Travel (Priority: MEDIUM)
+### 4.6 Travel (Priority: MEDIUM)
 - [ ] Create travel feature structure
 - [ ] Implement travel request form
 - [ ] Create booking management screen
@@ -367,7 +474,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Generate mock travel requests and bookings
 - [ ] Mock approval workflow
 
-### 3.7 Compensation (Priority: MEDIUM)
+### 4.7 Compensation (Priority: MEDIUM)
 - [ ] Create compensation feature structure
 - [ ] Implement salary breakdown screen
 - [ ] Add payslip viewer
@@ -376,7 +483,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Generate mock salary and payslip data
 - [ ] Mock compensation history
 
-### 3.8 Recognition (Priority: MEDIUM)
+### 4.8 Recognition (Priority: MEDIUM)
 - [ ] Create recognition feature structure
 - [ ] Implement recognition feed
 - [ ] Create award submission form
@@ -386,14 +493,14 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Create mock recognition repository
 - [ ] Generate mock recognition data and badges
 
-### 3.9 Bolt (Priority: LOW)
+### 4.9 Bolt (Priority: LOW)
 - [ ] Create bolt feature structure
 - [ ] Implement quick actions dashboard
 - [ ] Add customizable shortcuts
 - [ ] Create mock bolt repository
 - [ ] Generate mock quick actions data
 
-### 3.10 Ayush Health (Priority: MEDIUM)
+### 4.10 Ayush Health (Priority: MEDIUM)
 - [ ] Create health feature structure
 - [ ] Implement health dashboard
 - [ ] Create wellness challenges view
@@ -401,7 +508,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Create mock health repository
 - [ ] Generate mock health data and challenges
 
-### 3.11 Holiday Calendar (Priority: HIGH)
+### 4.11 Holiday Calendar (Priority: HIGH)
 - [ ] Create holiday calendar feature structure
 - [ ] Implement calendar view
 - [ ] Add regional holiday filtering
@@ -409,7 +516,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Create mock holiday calendar repository
 - [ ] Generate mock holiday data for 2026
 
-### 3.12 Documents (Priority: HIGH)
+### 4.12 Documents (Priority: HIGH)
 - [ ] Create documents feature structure
 - [ ] Implement document list screen
 - [ ] Add document upload functionality (mock)
@@ -418,7 +525,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Generate mock document metadata
 - [ ] Mock sharing and permissions
 
-### 3.13 IT Resources (Priority: MEDIUM)
+### 4.13 IT Resources (Priority: MEDIUM)
 - [ ] Create IT resources feature structure
 - [ ] Implement helpdesk ticket system
 - [ ] Create request forms (software/hardware)
@@ -426,7 +533,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Create mock IT resources repository
 - [ ] Generate mock ticket and request data
 
-### 3.14 Map (Priority: LOW)
+### 4.14 Map (Priority: LOW)
 - [ ] Create map feature structure
 - [ ] Implement office location maps
 - [ ] Add floor plan viewer
@@ -434,7 +541,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Create mock map repository
 - [ ] Generate mock office and desk data
 
-### 3.15 Emergency Contacts (Priority: HIGH)
+### 4.15 Emergency Contacts (Priority: HIGH)
 - [ ] Create emergency contacts feature structure
 - [ ] Implement contact directory
 - [ ] Add quick dial functionality
@@ -443,7 +550,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [ ] Create mock emergency contacts repository
 - [ ] Generate mock emergency contact data
 
-### 3.16 Company Overview (Priority: LOW)
+### 4.16 Company Overview (Priority: LOW)
 - [ ] Create company overview feature structure
 - [ ] Implement company info screens
 - [ ] Add leadership team section
@@ -454,27 +561,27 @@ All access points are debug-only and properly configured. The Talker screen uses
 
 ---
 
-## Phase 4: Cross-Cutting Concerns
+## Phase 5: Cross-Cutting Concerns
 
-### 4.1 Mock CMS Integration
+### 5.1 Mock CMS Integration
 - [ ] Set up CMS content models
 - [ ] Create mock CMS data loader
 - [ ] Implement feature-specific builders
 - [ ] Mock content updates
 
-### 4.2 Local Storage
+### 5.2 Local Storage
 - [ ] Implement local data persistence
 - [ ] Add offline indicators (mock mode)
 - [ ] Store mock data locally
 - [ ] Handle form submissions locally
 
-### 4.3 Mock Notifications
+### 5.3 Mock Notifications
 - [ ] Create mock notification system
 - [ ] Implement notification handlers
 - [ ] Add notification preferences
 - [ ] Create in-app notification center with mock data
 
-### 4.4 Search
+### 5.4 Search
 - [ ] Implement global search functionality (on mock data)
 - [ ] Add feature-specific search
 - [ ] Create search history
@@ -482,34 +589,34 @@ All access points are debug-only and properly configured. The Talker screen uses
 
 ---
 
-## Phase 5: Polish & Optimization
+## Phase 6: Polish & Optimization
 
-### 5.1 UI/UX Refinement
+### 6.1 UI/UX Refinement
 - [ ] Implement loading states and skeletons
 - [ ] Add error handling and retry mechanisms
 - [ ] Create empty states
 - [ ] Add animations and transitions
 - [ ] Implement pull-to-refresh
 
-### 5.2 Responsive Design
+### 6.2 Responsive Design
 - [ ] Test on various screen sizes
 - [ ] Optimize layouts for tablet
 - [ ] Ensure web responsiveness
 - [ ] Test orientation changes
 
-### 5.3 Accessibility
+### 6.3 Accessibility
 - [ ] Add semantic labels
 - [ ] Test with screen readers
 - [ ] Ensure proper contrast ratios
 - [ ] Add keyboard navigation (web)
 
-### 5.4 Performance
+### 6.4 Performance
 - [ ] Optimize image loading
 - [ ] Implement lazy loading
 - [ ] Profile and optimize slow screens
 - [ ] Reduce app size
 
-### 5.5 Testing
+### 6.5 Testing
 - [ ] Write unit tests for blocs/cubits
 - [ ] Create widget tests for key screens
 - [ ] Add integration tests for critical flows
@@ -517,23 +624,23 @@ All access points are debug-only and properly configured. The Talker screen uses
 
 ---
 
-## Phase 6: Deployment
+## Phase 7: Deployment
 
-### 6.1 Android
+### 7.1 Android
 - [ ] Configure app signing
 - [ ] Set up build variants
 - [ ] Create Play Store listing
 - [ ] Generate release build
 - [ ] Submit to Play Store
 
-### 6.2 iOS
+### 7.2 iOS
 - [ ] Configure provisioning profiles
 - [ ] Set up App Store Connect
 - [ ] Create App Store listing
 - [ ] Generate release build
 - [ ] Submit to App Store
 
-### 6.3 Web
+### 7.3 Web
 - [ ] Configure web hosting
 - [ ] Set up domain and SSL
 - [ ] Optimize for SEO
@@ -658,10 +765,11 @@ lib/features/
 - **Phase 1:** 3-4 days (setup + mock infrastructure)
 - **Phase 2:** 3-4 days (menu structure)
 - **Phase 2.5:** 0.5-1 day (Talker UI integration)
-- **Phase 3:** 6-8 weeks (iterative feature implementation with mock data)
-- **Phase 4:** 1 week (cross-cutting with mocks)
-- **Phase 5:** 1-2 weeks (polish)
-- **Phase 6:** N/A (deployment deferred until real API integration)
+- **Phase 3:** 1-2 days (login screen redesign based on design spec)
+- **Phase 4:** 6-8 weeks (iterative feature implementation with mock data)
+- **Phase 5:** 1 week (cross-cutting with mocks)
+- **Phase 6:** 1-2 weeks (polish)
+- **Phase 7:** N/A (deployment deferred until real API integration)
 
 **Total:** ~9-12 weeks for mock implementation
 
@@ -684,14 +792,15 @@ When ready to integrate real APIs:
 
 1. Authentication & Session
 2. Main Navigation & Menu
-3. Dashboard
-4. Team Directory
-5. Leave/Attendance
-6. Holiday Calendar
-7. Emergency Contacts
-8. Documents
-9. Policies
-10. Other features (iterative)
+3. Login Screen Redesign (Design-Driven)
+4. Dashboard
+5. Team Directory
+6. Leave/Attendance
+7. Holiday Calendar
+8. Emergency Contacts
+9. Documents
+10. Policies
+11. Other features (iterative)
 
 ---
 
