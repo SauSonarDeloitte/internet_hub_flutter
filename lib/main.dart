@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -11,6 +12,7 @@ import 'utils/environment.dart';
 import 'utils/logger/talker_bloc_observer.dart';
 import 'utils/logger/talker_config.dart';
 import 'utils/router/app_router.dart';
+import 'utils/storage/web_storage_directory.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,12 +21,20 @@ void main() async {
   EnvironmentConfig.setEnvironment(Environment.dev);
   TalkerConfig.info('App starting in ${EnvironmentConfig.current} mode');
 
-  // Initialize HydratedBloc storage
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: HydratedStorageDirectory(
-      (await getApplicationDocumentsDirectory()).path,
-    ),
-  );
+  // Initialize HydratedBloc storage with platform-specific handling
+  if (kIsWeb) {
+    // For web, use custom WebStorageDirectory that works with IndexedDB
+    HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: WebStorageDirectory(),
+    );
+  } else {
+    // For mobile/desktop, use path_provider with HydratedStorageDirectory wrapper
+    HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: HydratedStorageDirectory(
+        (await getTemporaryDirectory()).path,
+      ),
+    );
+  }
 
   // Set up Bloc observer
   Bloc.observer = AppBlocObserver();

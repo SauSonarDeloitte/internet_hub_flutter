@@ -85,8 +85,9 @@ class AppDrawer extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
+                // Don't call Navigator.pop() - GoRouter will handle navigation via redirect
+                // Just trigger logout and let the router redirect to login automatically
                 context.read<AuthBloc>().add(const AuthLogoutRequested());
-                Navigator.of(context).pop();
               },
             ),
           ],

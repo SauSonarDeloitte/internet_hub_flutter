@@ -4,6 +4,8 @@
 
 > **IMPORTANT for AI:** After completing each step or making any code changes, ALWAYS run `dart analyze` or use `getDiagnostics` tool to check for errors before proceeding to the next step. Fix all errors immediately before moving forward.
 
+> **CRITICAL for AI - Bug Fixes:** When fixing bugs, ALWAYS ask the user to manually test and confirm the fix is working before marking the bug as done. Do not mark bug fixes as complete without user confirmation.
+
 ## Phase 1: Project Setup & Core Infrastructure
 
 ### 1.1 Initialize Flutter Project
@@ -133,6 +135,34 @@ Main Menu
 - [x] Implement menu navigation logic
 - [x] Add menu search/filter functionality
 - [x] Create responsive menu (drawer for mobile, sidebar for desktop)
+
+### 2.4 Bug Fixes & Platform-Specific Issues
+- [x] Fix web platform: MissingPluginException for path_provider
+  - Issue: `getApplicationDocumentsDirectory` not available on web
+  - Solution: Created `WebStorageDirectory` class for web-specific storage
+  - Files modified: `lib/main.dart`, created `lib/utils/storage/web_storage_directory.dart`
+  - Result: App now works on web platform using IndexedDB for HydratedBloc storage
+
+- [x] Fix Duplicate GlobalKey and Navigation errors during drawer logout
+  - Issues: 
+    1. `Assertion failed: Duplicate GlobalKey detected in widget tree` 
+    2. `You have popped the last page off of the stack, there are no pages left to show`
+  - Location: `framework.dart:4738:12` and `go_router/src/delegate.dart:175:7`
+  - Root Cause Identified: 
+    - Drawer logout was calling `Navigator.of(context).pop()` which conflicts with GoRouter's navigation management
+    - GoRouter manages navigation through redirects, not manual Navigator.pop() calls
+    - Calling Navigator.pop() tried to pop the last page, causing navigation stack errors
+    - This also caused race conditions leading to duplicate GlobalKey errors
+  - **Solution Implemented:**
+    - Removed `Navigator.pop()` call from drawer logout completely
+    - Let GoRouter handle navigation automatically through its redirect logic
+    - When logout is triggered, AuthBloc state changes, GoRouter detects it and redirects to login
+    - Drawer closes automatically when the route changes
+  - Files Modified: 
+    - `lib/utils/router/app_router.dart` - Updated login route with pageBuilder
+    - `lib/features/auth/screens/login_screen.dart` - Changed to late final for GlobalKey
+    - `lib/shared/widgets/menu/app_drawer.dart` - Removed Navigator.pop() call, let GoRouter handle navigation
+  - **✅ VERIFIED WORKING:** User confirmed both errors are now fixed - logout from drawer works correctly
 
 **✅ Phase 2 Complete & Working!** All navigation and menu components are implemented and tested. The app now has:
 - ✅ Responsive app shell (mobile, tablet, desktop layouts)

@@ -39,11 +39,13 @@ class AppRouter {
 
         // If not authenticated and not going to login, redirect to login
         if (!isAuthenticated && !isGoingToLogin) {
+          TalkerConfig.debug('Redirecting to login');
           return RouteNames.login;
         }
 
         // If authenticated and going to login, redirect to dashboard
         if (isAuthenticated && isGoingToLogin) {
+          TalkerConfig.debug('Redirecting to dashboard');
           return RouteNames.dashboard;
         }
 
@@ -56,7 +58,10 @@ class AppRouter {
         GoRoute(
           path: RouteNames.login,
           name: 'login',
-          builder: (context, state) => const LoginScreen(),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const LoginScreen(),
+          ),
         ),
         
         // Dashboard (home)

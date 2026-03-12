@@ -12,9 +12,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController(text: 'demo@company.com');
-  final _passwordController = TextEditingController(text: 'password123');
+  // Use a unique key for each instance to avoid conflicts
+  late final _formKey = GlobalKey<FormState>();
+  late final _emailController = TextEditingController(text: 'demo@company.com');
+  late final _passwordController = TextEditingController(text: 'password123');
   bool _obscurePassword = true;
 
   @override
