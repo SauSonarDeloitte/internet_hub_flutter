@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/layout/app_shell.dart';
 import '../../../utils/di/service_locator.dart';
+import '../../../core/route/route_names.dart';
+import '../../../core/colors/app_colors.dart';
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_event.dart';
 import '../bloc/dashboard_state.dart';
-import '../widgets/quick_access_card_widget.dart';
 import '../widgets/notification_widget.dart';
 import '../widgets/activity_feed_widget.dart';
 import '../widgets/leave_balance_widget.dart';
@@ -85,14 +87,18 @@ class DashboardView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Important Action Buttons
+                    _buildImportantActionButtons(context),
+                    const SizedBox(height: 24),
+
                     // Welcome section
                     _buildWelcomeSection(context, data.userSummary),
                     const SizedBox(height: 24),
 
-                    // Quick access cards
-                    _buildSectionTitle(context, 'Quick Access'),
+                    // Employee Self-Service Section
+                    _buildSectionTitle(context, 'Employee Self-Service'),
                     const SizedBox(height: 12),
-                    _buildQuickAccessGrid(context, data.quickAccessCards),
+                    _buildEmployeeSelfServiceGrid(context),
                     const SizedBox(height: 24),
 
                     // Leave balance
@@ -202,28 +208,6 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickAccessGrid(BuildContext context, List quickAccessCards) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 1.1,
-          ),
-          itemCount: quickAccessCards.length,
-          itemBuilder: (context, index) {
-            return QuickAccessCardWidget(card: quickAccessCards[index]);
-          },
-        );
-      },
-    );
-  }
-
   Widget _buildNotifications(BuildContext context, List notifications) {
     final unreadNotifications = notifications.where((n) => !n.isRead).toList();
     final displayNotifications = unreadNotifications.isEmpty
@@ -282,5 +266,254 @@ class DashboardView extends StatelessWidget {
       ],
     );
   }
+
+  Widget _buildImportantActionButtons(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmallScreen = constraints.maxWidth < 600;
+        
+        return Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            _buildActionButton(
+              context,
+              label: 'Integrity Matters! - Ethics Helpline',
+              icon: Icons.security,
+              onTap: () {
+                // TODO: Navigate to Ethics Helpline or show dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Ethics Helpline - Coming Soon')),
+                );
+              },
+              isFullWidth: isSmallScreen,
+            ),
+            _buildActionButton(
+              context,
+              label: 'POSH (Prevention Of Sexual Harassment)',
+              icon: Icons.shield,
+              onTap: () {
+                // TODO: Navigate to POSH or show dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('POSH - Coming Soon')),
+                );
+              },
+              isFullWidth: isSmallScreen,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+    bool isFullWidth = false,
+  }) {
+    return SizedBox(
+      width: isFullWidth ? double.infinity : null,
+      child: ElevatedButton.icon(
+        onPressed: onTap,
+        icon: Icon(icon),
+        label: Text(
+          label,
+          style: const TextStyle(color: Colors.black),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.brightWhite,
+          foregroundColor: Colors.black,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          elevation: 2,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmployeeSelfServiceGrid(BuildContext context) {
+    final services = [
+      _ServiceOption(
+        icon: Icons.people,
+        label: 'Team Directory',
+        route: RouteNames.teamDirectory,
+      ),
+      _ServiceOption(
+        icon: Icons.policy,
+        label: 'Policies',
+        route: RouteNames.policies,
+      ),
+      _ServiceOption(
+        icon: Icons.card_giftcard,
+        label: 'Benefits',
+        route: RouteNames.benefits,
+      ),
+      _ServiceOption(
+        icon: Icons.event_available,
+        label: 'Leave/Attendance',
+        route: RouteNames.leaveAttendance,
+      ),
+      _ServiceOption(
+        icon: Icons.attach_money,
+        label: 'Compensation',
+        route: RouteNames.compensation,
+      ),
+      _ServiceOption(
+        icon: Icons.emoji_events,
+        label: 'Recognition - GEM',
+        route: RouteNames.recognition,
+      ),
+      _ServiceOption(
+        icon: Icons.favorite,
+        label: 'Health & Wellness',
+        route: RouteNames.ayushHealth,
+      ),
+      _ServiceOption(
+        icon: Icons.calendar_today,
+        label: 'Holiday Calendar',
+        route: RouteNames.holidayCalendar,
+      ),
+      _ServiceOption(
+        icon: Icons.folder,
+        label: 'Documents',
+        route: RouteNames.documents,
+        hasDownloadOptions: true,
+      ),
+      _ServiceOption(
+        icon: Icons.flight,
+        label: 'Travel',
+        route: RouteNames.travel,
+      ),
+      _ServiceOption(
+        icon: Icons.school,
+        label: 'BOLT - Start Learning!',
+        route: RouteNames.bolt,
+      ),
+      _ServiceOption(
+        icon: Icons.lightbulb,
+        label: 'Idea Management Portal',
+        route: RouteNames.dashboard, // TODO: Add proper route
+      ),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final crossAxisCount = constraints.maxWidth > 900
+            ? 4
+            : constraints.maxWidth > 600
+                ? 3
+                : 2;
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.0,
+          ),
+          itemCount: services.length,
+          itemBuilder: (context, index) {
+            final service = services[index];
+            return _buildServiceOptionCard(context, service);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildServiceOptionCard(BuildContext context, _ServiceOption service) {
+    return InkWell(
+      onTap: () {
+        if (service.hasDownloadOptions) {
+          _showDocumentDownloadDialog(context);
+        } else {
+          context.go(service.route);
+        }
+      },
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              service.icon,
+              size: 48,
+              color: AppColors.blue,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              service.label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDocumentDownloadDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Download Documents'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.download, color: AppColors.blue),
+              title: const Text('About Bajaj Auto'),
+              onTap: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Downloading About Bajaj Auto...')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.download, color: AppColors.blue),
+              title: const Text('Code of Conduct'),
+              onTap: () {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Downloading Code of Conduct...')),
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServiceOption {
+  final IconData icon;
+  final String label;
+  final String route;
+  final bool hasDownloadOptions;
+
+  _ServiceOption({
+    required this.icon,
+    required this.label,
+    required this.route,
+    this.hasDownloadOptions = false,
+  });
 }
 

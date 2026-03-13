@@ -397,72 +397,50 @@ All access points are debug-only and properly configured. The Talker screen uses
 
 ## Phase 3.5: Dashboard Screen Design Implementation
 
-### 3.5.1 Welcome Section Styling
-- [ ] Update welcome card with proper color scheme
-- [ ] Style user avatar with blue primary color
-- [ ] Implement time-based greeting logic
-- [ ] Add user designation and department display
-- [ ] Apply bright white card background
+### 3.5.1 Employee Self-Service Section
+- [x] Add "Employee Self-Service" section heading with divider
+- [x] Create 3-column grid layout for service options
+- [x] Implement service option items with:
+  - [x] Blue icon centered at top
+  - [x] Black text label at bottom
+  - [x] Proper spacing and alignment
+  - [x] No card effect (flat design)
+- [x] Add the following service options:
+  - [x] Team Directory
+  - [x] Policies
+  - [x] Benefits
+  - [x] Leave/Attendance
+  - [x] Compensation
+  - [x] Recognition - GEM
+  - [x] Health & Wellness
+  - [x] Holiday Calendar
+  - [x] Documents
+  - [x] Travel
+  - [x] BOLT - Start Learning!
+  - [x] Idea Management Portal
+- [x] Make grid responsive (adjust columns for mobile/tablet)
+- [x] Wire each option to navigate to respective screen
+- [ ] Test grid layout on different screen sizes (requires user testing)
 
-### 3.5.2 Quick Access Cards Redesign
-- [ ] Update card styling with bright white background
-- [ ] Apply blue color to icons
-- [ ] Implement responsive grid (2/3/4 columns)
-- [ ] Add hover effects for web/desktop
-- [ ] Add tap feedback for mobile
-- [ ] Ensure consistent card sizing
+### 3.5.2 Document Download Options
+- [x] Add download section at bottom of Documents option
+- [x] Create download buttons for:
+  - [x] About Bajaj Auto
+  - [x] Code of Conduct
+- [x] Style download buttons consistently
+- [x] Add download icons
+- [x] Implement mock download functionality
+- [ ] Test download button visibility and functionality (requires user testing)
 
-### 3.5.3 Leave Balance Widget Styling
-- [ ] Update progress bars with blue color
-- [ ] Style remaining days display
-- [ ] Add light blue background for summary
-- [ ] Improve visual hierarchy
-- [ ] Add proper spacing and padding
-
-### 3.5.4 Notifications Section Redesign
-- [ ] Style notification cards with bright white background
-- [ ] Add blue unread indicators
-- [ ] Update notification icons with blue accent
-- [ ] Improve timestamp display
-- [ ] Style "View all" button
-- [ ] Create empty state with icon
-
-### 3.5.5 Upcoming Events Widget Styling
-- [ ] Update event card styling
-- [ ] Add blue background to date badges
-- [ ] Style event titles and descriptions
-- [ ] Improve calendar icon display
-- [ ] Add proper spacing between events
-
-### 3.5.6 Activity Feed Redesign
-- [ ] Update timeline styling with blue accents
-- [ ] Style activity icons
-- [ ] Improve connecting lines between activities
-- [ ] Update card container with bright white background
-- [ ] Add proper spacing and padding
-
-### 3.5.7 Responsive Layout Improvements
-- [ ] Test and adjust mobile layout (<600px)
-- [ ] Test and adjust tablet layout (600-1024px)
-- [ ] Test and adjust desktop layout (>1024px)
-- [ ] Verify grid responsiveness
-- [ ] Test orientation changes
-
-### 3.5.8 Loading & Error States
-- [ ] Implement skeleton loaders with light blue shimmer
-- [ ] Style loading indicators with blue color
-- [ ] Update error state styling
-- [ ] Style retry button with blue color
-- [ ] Test all loading states
-
-### 3.5.9 Testing & Verification
-- [ ] Test on different screen sizes
-- [ ] Verify color scheme consistency
-- [ ] Test pull-to-refresh functionality
-- [ ] Test all interactive elements
-- [ ] Run `dart analyze` to ensure no errors
-- [ ] Verify theme applies correctly
-
+### 3.5.3 Add Important Action Buttons
+- [x] Add "Integrity Matters! - Ethics Helpline" button below greeting
+- [x] Add "POSH (Prevention Of Sexual Harassment)" button below greeting
+- [x] Style buttons with black text
+- [x] Arrange buttons in a horizontal row
+- [x] Make buttons responsive (stack vertically on small screens)
+- [x] Add appropriate icons for each button
+- [x] Wire buttons to navigate to respective screens or show information dialogs
+- [ ] Test button visibility and functionality (requires user testing)
 ---
 
 ## Phase 4: Feature Implementation (Iterative)
