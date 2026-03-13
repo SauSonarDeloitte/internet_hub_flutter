@@ -82,6 +82,11 @@ class AppTheme {
         backgroundColor: AppColors.blue,
         foregroundColor: AppColors.brightWhite,
       ),
+      dividerTheme: const DividerThemeData(
+        color: Colors.transparent,
+        thickness: 0,
+        space: 0,
+      ),
     );
   }
 
@@ -163,6 +168,11 @@ class AppTheme {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.blue,
         foregroundColor: AppColors.brightWhite,
+      ),
+      dividerTheme: const DividerThemeData(
+        color: Colors.transparent,
+        thickness: 0,
+        space: 0,
       ),
     );
   }

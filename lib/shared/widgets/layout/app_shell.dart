@@ -57,7 +57,11 @@ class _DesktopLayout extends StatelessWidget {
             width: 280,
             child: AppDrawer(),
           ),
-          const VerticalDivider(width: 1),
+          VerticalDivider(
+            width: 1,
+            thickness: 0,
+            color: Colors.transparent,
+          ),
           // Main content
           Expanded(
             child: Column(

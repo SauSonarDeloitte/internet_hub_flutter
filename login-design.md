@@ -9,7 +9,7 @@ Light Blue - rgba(196, 207, 253, 1)
 White - #ffffffe5
 Bright White - #FFFFFF
 - [x] Create color const file in core
-- [x] Background
+- [x] Background 
   - [x] Web
     - [x] 1/4th width blue gradient
     - [x] 3/4 width white area with login form card
