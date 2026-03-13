@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/route/route_names.dart';
 import '../../../core/colors/app_colors.dart';
+import '../../../shared/widgets/branding/bajaj_logo.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -51,69 +52,89 @@ class _LoginScreenState extends State<LoginScreen> {
           
           if (isWeb) {
             // Web layout: 1/4 blue gradient + 3/4 white with form
-            return Row(
+            return Stack(
               children: [
-                // Left side: 1/4 width blue gradient
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          AppColors.darkBlue,
-                          AppColors.blue,
-                        ],
-                      ),
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.business,
-                            size: 80,
-                            color: AppColors.brightWhite,
+                Row(
+                  children: [
+                    // Left side: 1/4 width blue gradient
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.darkBlue,
+                              AppColors.blue,
+                            ],
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'HR App',
-                            style: theme.textTheme.headlineLarge?.copyWith(
-                              color: AppColors.brightWhite,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.business,
+                                size: 80,
+                                color: AppColors.brightWhite,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'HR App',
+                                style: theme.textTheme.headlineLarge?.copyWith(
+                                  color: AppColors.brightWhite,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                // Right side: 3/4 width white area with login form
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    color: AppColors.brightWhite,
-                    child: Center(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(48),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 450),
-                          child: _buildLoginForm(context, theme),
                         ),
                       ),
                     ),
-                  ),
+                    // Right side: 3/4 width white area with login form
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        color: AppColors.brightWhite,
+                        child: Center(
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(48),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 450),
+                              child: _buildLoginForm(context, theme),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Bajaj logo in top-left corner of white area
+                Positioned(
+                  top: 24,
+                  left: constraints.maxWidth * 0.25 + 24, // Position in white area
+                  child: const BajajLogo(size: BajajLogoSize.medium),
                 ),
               ],
             );
           } else {
             // Mobile layout: centered form with padding
-            return Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: _buildLoginForm(context, theme),
-              ),
+            return Stack(
+              children: [
+                Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: _buildLoginForm(context, theme),
+                  ),
+                ),
+                // Bajaj logo in top-left corner
+                const Positioned(
+                  top: 24,
+                  left: 24,
+                  child: BajajLogo(size: BajajLogoSize.medium),
+                ),
+              ],
             );
           }
         },

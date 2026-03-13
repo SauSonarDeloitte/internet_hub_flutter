@@ -6,6 +6,7 @@ import '../../../features/auth/bloc/auth_bloc.dart';
 import '../../../features/auth/bloc/auth_event.dart';
 import '../../../features/auth/bloc/auth_state.dart';
 import '../../../utils/debug/debug_utils.dart';
+import '../branding/bajaj_logo.dart';
 import '../menu/app_drawer.dart';
 
 class AppShell extends StatelessWidget {
@@ -91,7 +92,11 @@ class _TabletLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: BajajLogo(size: BajajLogoSize.small),
+        ),
+        leadingWidth: 120,
         actions: const [_UserProfileButton()],
       ),
       drawer: const AppDrawer(),
@@ -114,7 +119,13 @@ class _MobileLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: const BajajLogo(size: BajajLogoSize.small),
         actions: const [_UserProfileButton()],
       ),
       drawer: const AppDrawer(),
@@ -150,18 +161,8 @@ class _AppBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          if (showMenuButton)
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-          const SizedBox(width: 16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          // Bajaj logo in leading position
+          const BajajLogo(size: BajajLogoSize.small),
           const Spacer(),
           // Debug button (only visible in debug mode)
           if (DebugUtils.isDebugMode)

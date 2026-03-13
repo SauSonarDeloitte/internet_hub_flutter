@@ -10,6 +10,11 @@
 - White - #ffffffe5
 - Bright White - #FFFFFF
 
-# Tasks:
+## Tasks
 - [x] Remove black border from screen
-- [ ] 
+- [x] Add Bajaj logo to AppBar
+  - [x] Position logo in AppBar leading (top-left corner)
+  - [x] Use BajajLogo widget from `lib/shared/widgets/branding/bajaj_logo.dart`
+  - [x] Logo size: small variant for AppBar
+  - [x] Ensure logo is visible on all screen sizes 
+  - [x] Remove app bar Dashboard Text

@@ -351,7 +351,17 @@ All access points are debug-only and properly configured. The Talker screen uses
 - [x] Form validation and error handling
 - [x] Consistent spacing and padding
 
-### 3.5 Testing & Verification
+### 3.5 Bajaj Logo Widget
+- [x] Create Bajaj logo widget in `lib/shared/widgets/branding/bajaj_logo.dart`
+- [x] Implement big blue "Bajaj" text with white shadow effect
+- [x] Add small gray "HR Transformation" text at bottom
+- [x] Make logo responsive (size variants: small, medium, large)
+- [x] Add logo to login screen (top-left corner)
+- [x] Add logo to dashboard screen (top-left corner in AppBar)
+- [x] Test logo visibility on different backgrounds
+- [x] Verify text shadows render correctly
+
+### 3.6 Testing & Verification
 - [x] Test responsive layout on different screen sizes
 - [x] Verify color scheme consistency
 - [x] Test form validation
@@ -374,7 +384,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 - Created: `theme.md` - Theme documentation
 - Modified: `lib/shared/theme/app_theme.dart` - Updated theme with new colors
 - Modified: `lib/features/auth/screens/login_screen.dart` - Responsive login layout
-- Modified: `login-design.md` - Design specification (all tasks completed)
+- Modified: `login-tasks.md` - Design specification (all tasks completed)
 
 **Design Specifications:**
 - Blue gradient: Dark Blue (#0D0D8F) to Blue (#2828FF)
@@ -458,7 +468,7 @@ All access points are debug-only and properly configured. The Talker screen uses
 ## Phase 4: Feature Implementation (Iterative)
 
 ### 4.1 Dashboard (Priority: HIGH)
-> Design Spec: [dashboard-design.md](dashboard-design.md)
+> Design Spec: [dashboard-tasks.md](dashboard-tasks.md)
 
 - [x] Create dashboard feature folder structure
 - [x] Implement dashboard screen with widgets
