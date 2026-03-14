@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/layout/app_shell.dart';
 import '../../../utils/di/service_locator.dart';
-import '../../../core/route/route_names.dart';
 import '../../../core/colors/app_colors.dart';
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_event.dart';
 import '../bloc/dashboard_state.dart';
-import '../widgets/notification_widget.dart';
+import '../models/dashboard_data.dart';
 import '../widgets/activity_feed_widget.dart';
 import '../widgets/leave_balance_widget.dart';
 import '../widgets/upcoming_events_widget.dart';
+import '../widgets/service_grid.dart';
+import '../widgets/right_sidebar.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -73,61 +73,14 @@ class DashboardView extends StatelessWidget {
                 ? state.data
                 : (state as DashboardRefreshing).data;
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                context.read<DashboardBloc>().add(const RefreshDashboard());
-                // Wait for the refresh to complete
-                await context.read<DashboardBloc>().stream.firstWhere(
-                      (state) => state is DashboardLoaded || state is DashboardError,
-                    );
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth >= 1024) {
+                  return _buildWideLayout(context, data);
+                } else {
+                  return _buildNarrowLayout(context, data);
+                }
               },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Important Action Buttons
-                    _buildImportantActionButtons(context),
-                    const SizedBox(height: 24),
-
-                    // Welcome section
-                    _buildWelcomeSection(context, data.userSummary),
-                    const SizedBox(height: 24),
-
-                    // Employee Self-Service Section
-                    _buildSectionTitle(context, 'Employee Self-Service'),
-                    const SizedBox(height: 12),
-                    _buildEmployeeSelfServiceGrid(context),
-                    const SizedBox(height: 24),
-
-                    // Leave balance
-                    LeaveBalanceWidget(leaveBalance: data.leaveBalance),
-                    const SizedBox(height: 24),
-
-                    // Notifications
-                    _buildSectionTitle(context, 'Notifications'),
-                    const SizedBox(height: 12),
-                    _buildNotifications(context, data.notifications),
-                    const SizedBox(height: 24),
-
-                    // Upcoming events
-                    UpcomingEventsWidget(events: data.upcomingEvents),
-                    const SizedBox(height: 24),
-
-                    // Activity feed
-                    _buildSectionTitle(context, 'Recent Activity'),
-                    const SizedBox(height: 12),
-                    Card(
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: ActivityFeedWidget(activities: data.activityFeed),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             );
           }
 
@@ -137,19 +90,91 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildWelcomeSection(BuildContext context, userSummary) {
-    final theme = Theme.of(context);
-    final now = DateTime.now();
-    final hour = now.hour;
-    String greeting;
+  Future<void> _onRefresh(BuildContext context) async {
+    context.read<DashboardBloc>().add(const RefreshDashboard());
+    await context.read<DashboardBloc>().stream.firstWhere(
+          (s) => s is DashboardLoaded || s is DashboardError,
+        );
+  }
 
-    if (hour < 12) {
-      greeting = 'Good Morning';
-    } else if (hour < 17) {
-      greeting = 'Good Afternoon';
-    } else {
-      greeting = 'Good Evening';
-    }
+  Widget _buildWideLayout(BuildContext context, DashboardData data) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 4,
+          child: RefreshIndicator(
+            onRefresh: () => _onRefresh(context),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: _buildMainContent(context, data),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: RightSidebar(notifications: data.notifications),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNarrowLayout(BuildContext context, DashboardData data) {
+    return RefreshIndicator(
+      onRefresh: () => _onRefresh(context),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildMainContent(context, data),
+            RightSidebar(notifications: data.notifications),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainContent(BuildContext context, DashboardData data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildImportantActionButtons(context),
+        const SizedBox(height: 24),
+        _buildWelcomeSection(context, data.userSummary),
+        const SizedBox(height: 24),
+        _buildSectionTitle(context, 'Employee Self-Service'),
+        const Divider(),
+        const SizedBox(height: 12),
+        const ServiceGrid(),
+        const SizedBox(height: 24),
+        LeaveBalanceWidget(leaveBalance: data.leaveBalance),
+        const SizedBox(height: 24),
+        UpcomingEventsWidget(events: data.upcomingEvents),
+        const SizedBox(height: 24),
+        _buildSectionTitle(context, 'Recent Activity'),
+        const SizedBox(height: 12),
+        Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: ActivityFeedWidget(activities: data.activityFeed),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWelcomeSection(BuildContext context, UserSummary userSummary) {
+    final theme = Theme.of(context);
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12
+        ? 'Good Morning'
+        : hour < 17
+            ? 'Good Afternoon'
+            : 'Good Evening';
 
     return Card(
       elevation: 2,
@@ -208,70 +233,11 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildNotifications(BuildContext context, List notifications) {
-    final unreadNotifications = notifications.where((n) => !n.isRead).toList();
-    final displayNotifications = unreadNotifications.isEmpty
-        ? notifications.take(3).toList()
-        : unreadNotifications.take(3).toList();
-
-    if (displayNotifications.isEmpty) {
-      return Card(
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Center(
-            child: Column(
-              children: [
-                Icon(
-                  Icons.notifications_none,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'No notifications',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Column(
-      children: [
-        ...displayNotifications.map(
-          (notification) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: NotificationWidget(
-              notification: notification,
-              onTap: () {
-                context
-                    .read<DashboardBloc>()
-                    .add(MarkNotificationRead(notification.id));
-              },
-            ),
-          ),
-        ),
-        if (notifications.length > 3)
-          TextButton(
-            onPressed: () {
-              // TODO: Navigate to all notifications screen
-            },
-            child: const Text('View all notifications'),
-          ),
-      ],
-    );
-  }
-
   Widget _buildImportantActionButtons(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isSmallScreen = constraints.maxWidth < 600;
-        
+
         return Wrap(
           spacing: 12,
           runSpacing: 12,
@@ -281,7 +247,6 @@ class DashboardView extends StatelessWidget {
               label: 'Integrity Matters! - Ethics Helpline',
               icon: Icons.security,
               onTap: () {
-                // TODO: Navigate to Ethics Helpline or show dialog
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Ethics Helpline - Coming Soon')),
                 );
@@ -293,7 +258,6 @@ class DashboardView extends StatelessWidget {
               label: 'POSH (Prevention Of Sexual Harassment)',
               icon: Icons.shield,
               onTap: () {
-                // TODO: Navigate to POSH or show dialog
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('POSH - Coming Soon')),
                 );
@@ -331,189 +295,4 @@ class DashboardView extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildEmployeeSelfServiceGrid(BuildContext context) {
-    final services = [
-      _ServiceOption(
-        icon: Icons.people,
-        label: 'Team Directory',
-        route: RouteNames.teamDirectory,
-      ),
-      _ServiceOption(
-        icon: Icons.policy,
-        label: 'Policies',
-        route: RouteNames.policies,
-      ),
-      _ServiceOption(
-        icon: Icons.card_giftcard,
-        label: 'Benefits',
-        route: RouteNames.benefits,
-      ),
-      _ServiceOption(
-        icon: Icons.event_available,
-        label: 'Leave/Attendance',
-        route: RouteNames.leaveAttendance,
-      ),
-      _ServiceOption(
-        icon: Icons.attach_money,
-        label: 'Compensation',
-        route: RouteNames.compensation,
-      ),
-      _ServiceOption(
-        icon: Icons.emoji_events,
-        label: 'Recognition - GEM',
-        route: RouteNames.recognition,
-      ),
-      _ServiceOption(
-        icon: Icons.favorite,
-        label: 'Health & Wellness',
-        route: RouteNames.ayushHealth,
-      ),
-      _ServiceOption(
-        icon: Icons.calendar_today,
-        label: 'Holiday Calendar',
-        route: RouteNames.holidayCalendar,
-      ),
-      _ServiceOption(
-        icon: Icons.folder,
-        label: 'Documents',
-        route: RouteNames.documents,
-        hasDownloadOptions: true,
-      ),
-      _ServiceOption(
-        icon: Icons.flight,
-        label: 'Travel',
-        route: RouteNames.travel,
-      ),
-      _ServiceOption(
-        icon: Icons.school,
-        label: 'BOLT - Start Learning!',
-        route: RouteNames.bolt,
-      ),
-      _ServiceOption(
-        icon: Icons.lightbulb,
-        label: 'Idea Management Portal',
-        route: RouteNames.dashboard, // TODO: Add proper route
-      ),
-    ];
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth > 900
-            ? 4
-            : constraints.maxWidth > 600
-                ? 3
-                : 2;
-
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.0,
-          ),
-          itemCount: services.length,
-          itemBuilder: (context, index) {
-            final service = services[index];
-            return _buildServiceOptionCard(context, service);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildServiceOptionCard(BuildContext context, _ServiceOption service) {
-    return InkWell(
-      onTap: () {
-        if (service.hasDownloadOptions) {
-          _showDocumentDownloadDialog(context);
-        } else {
-          context.go(service.route);
-        }
-      },
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              service.icon,
-              size: 48,
-              color: AppColors.blue,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              service.label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showDocumentDownloadDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Download Documents'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.download, color: AppColors.blue),
-              title: const Text('About Bajaj Auto'),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Downloading About Bajaj Auto...')),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.download, color: AppColors.blue),
-              title: const Text('Code of Conduct'),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Downloading Code of Conduct...')),
-                );
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
 }
-
-class _ServiceOption {
-  final IconData icon;
-  final String label;
-  final String route;
-  final bool hasDownloadOptions;
-
-  _ServiceOption({
-    required this.icon,
-    required this.label,
-    required this.route,
-    this.hasDownloadOptions = false,
-  });
-}
-

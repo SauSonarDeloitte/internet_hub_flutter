@@ -418,6 +418,10 @@ All access points are debug-only and properly configured. The Talker screen uses
   - [x] Travel
   - [x] BOLT - Start Learning!
   - [x] Idea Management Portal
+- [x] Add "Search services, documents" option in top right cornor
+- [x] Column of 1/5 at 
+  - [x] Latest notification section with listview
+  - [x] Calender saction with a calender widget
 - [x] Make grid responsive (adjust columns for mobile/tablet)
 - [x] Wire each option to navigate to respective screen
 - [ ] Test grid layout on different screen sizes (requires user testing)
